@@ -1,0 +1,232 @@
+create_course_outline_task:
+  agent: course_outline_creator
+  description: >
+    Create a comprehensive course outline for the course {course}, specific to the subject {subject}.
+    List the things you should definitely discuss. 
+    Be sure to include something about the special requirements: {special_requirements}
+    IMPORTANT: write this section entirely in {language}!
+    Prerequisites:
+    - Outline the structure of the course.
+    - Include main and sub-topics as bullet points.
+    - List learning objectives for each section.
+    - Organize the outline in a logical, easy-to-follow manner.
+    - Add instructions for the other agents to follow the outline, .
+  expected_output: >
+    A short course outline without any content, examples or exercises.
+    
+    Expected format:
+      # Course Outline for {course}: {subject}
+      ## Topics to cover
+      - Topic 1
+        - Sub-topic 1
+        - Sub-topic 2
+        - ...
+      - Topic 2
+        - Sub-topic 1
+        - Sub-topic 2
+        - ...
+      - ...
+    
+      ## Agent Instructions
+      - Follow the outline to complete the course, examples, exercises and the quiz
+      - Always responds in {language}
+      - Always follows the best practices of the subject
+      - **Special requirements: {special_requirements}**
+
+write_course_content_task:
+  agent: course_writer
+  description: >
+    Create comprehensive, high-quality course content based on the provided outline structure.
+    The content should be thorough, engaging, and tailored to the specified subject matter.
+    If the course covers a programming language, include multiple code examples with detailed explanations.
+    Always verify that the content is correct and complete and provide your sources.
+    Always verify your sources and don't add links to the wrong sources.
+    Write the content with at least 5000 words!
+
+  context:
+    - create_course_outline
+  expected_output: >
+    Produce in-depth course content that expands upon the outline without repeating its structure.
+    Each topic and subtopic should be explained in detail, with relevant examples and thorough explanations.
+    Start with a short version of the course outline.
+    Add 3 placeholders named "%examples%", "%exercises%" and "%quiz%" JUST BEFORE the summary section.
+    
+    The content should follow this structure:
+
+    1. Course Title: "{course}: {subject}"
+    
+    2. Course Outline:
+        - part 1
+        - part 2
+        - ...
+        - part n
+
+    3. Introduction:
+       - Provide a comprehensive overview of the {course} and its relevance to {subject}
+       - Outline the learning objectives and the value proposition for students
+
+    4. Main Content:
+       For each main topic and subtopic:
+       - Offer a detailed explanation of the concept
+       - Include at least one practical example (more for programming topics)
+       - Provide a step-by-step breakdown of each example
+       - Discuss real-world applications and relevance
+
+    5. Best Practices:
+       - List and explain at least 5 best practices related to the {subject}
+       - Provide examples or scenarios for each best practice
+
+    6. Common Pitfalls:
+       - Identify at least 5 common mistakes or misconceptions
+       - Explain each pitfall and offer solutions or alternatives
+       - Include examples demonstrating the pitfalls: 1 basic example and 1 good exampl
+    
+    %examples%
+
+    %exercises%
+
+    %quiz%
+    
+    7. Summary:
+       - Summarize key takeaways from the course
+       - Reinforce the practical applications of the learned material
+       - Encourage further exploration and continued learning
+
+    8. Additional Resources:
+       - Provide a curated list of at least 10 high-quality resources
+       - Include a mix of websites, videos, and online courses
+       - Use only links from the search tool
+       - Format as: - [Resource Name](URL or reference)
+
+    Formatting Guidelines:
+    - Use Markdown formatting for headings, subheadings, and lists
+    - Start with a heading 2 (##) for the course title
+    - Enclose code examples in appropriate Markdown code blocks
+    - Ensure proper indentation and spacing for readability
+    - Use bullet point for the additional resources E.g: - [Resource Name](URL or reference)
+    - The placeholders must be named: "%examples%", "%exercises%" and "%quiz%" but without quotes
+    - Add an empty line before, after and between each placeholder
+
+    The final content should be comprehensive, engaging, and valuable for learners
+    at various skill levels, from beginners to advanced practitioners in the field.
+
+enhance_course_content_task:
+  agent: course_enhancer
+  description: >
+    You will receive a markdown file containing course content. 
+    Your goal is to produce an expanded version of the input, maintaining the original structure 
+    but with much more detailed explanations.
+  context:
+    - write_course_content
+  expected_output: >
+    You will receive a markdown file containing course content.
+    Your job is expand this content in the following ways:
+    Expansion process:
+       - Preserve the original markdown formatting (headers, subheaders, bullet points).
+       - Expand ONLY the **Introduction** and **Main Content** sections and leave the rest of the content unchanged.
+       - For each section or bullet point in the **Introduction** and **Main Content** sections, expand the explanation by adding:
+          - More detailed information
+          - Examples to illustrate concepts
+          - Analogies to help understanding
+          - Context and background information
+          - Potential applications or real-world relevance
+    Writing style:
+       - Use clear, concise language suitable for the target audience.
+       - Maintain a friendly, engaging tone.
+       - Break down complex ideas into easily digestible parts.
+       - Use transitional phrases to ensure smooth flow between ideas.
+    Length: Aim to at least triple the length of each explanation, but ensure that the added content is well-structured, meaningful and relevant.
+    Accuracy: Ensure all added information is factually correct and consistent with the original content.
+    Additional elements:
+       - Where appropriate, suggest places where diagrams, charts, or images could be added to enhance understanding (note: do not create the images, just suggest their placement).
+       - Add "Key Takeaways" at the end of each major section to summarize the main points.
+    Consistency: Ensure that the expanded content maintains consistency in terminology and concepts throughout the document.
+    Limitations: If you encounter any ambiguous or unclear points in the original content, expand on them to the best of your ability based on context, but flag these areas for human review.
+    **IMPORTANT: Do not change the placeholders names: "%examples%", "%exercises%" and "%quiz%" but ensure they are included in the expanded content.**
+
+create_examples_task:
+  agent: example_creator
+  description: >
+    Create {examples} examples for the course {course}, specific to the subject {subject}.
+    Only include examples that are relevant to the course content.
+    Start with basic examples and progressively add more and more complex examples and explain each example in detail.
+    IMPORTANT: don't include exercises that are already included in the course content!
+  context:
+    - create_course_outline
+    - write_course_content
+  expected_output: >
+    Markdown-formatted examples followed by a detailed explanation of each example.
+    Add 3 stars at the end of each title to indicate the level of complexity.
+    - Basic examples has 1 filled star and 2 open stars: &#9733;&#9734;&#9734;
+    - Intermediate examples has 2 filled stars and 1 open star: &#9733;&#9733;&#9734;
+    - Advanced examples has 3 filled stars and 0 open stars: &#9733;&#9733;&#9733;
+    
+    Formatting Guidelines:
+    - Use Markdown formatting for headings, subheadings, and lists
+    - Start with a heading 2 (##) for the title
+    - Use heading 3 (###) for each example e.g:
+      ### Calculator &#9733;&#9734;&#9734;
+      ### Roll the dice &#9733;&#9733;&#9734;
+    - Enclose code examples in appropriate Markdown code blocks
+    - Ensure proper indentation and spacing for readability
+
+create_exercises_task:
+  agent: exercise_creator
+  description: >
+    Create {exercises} exercises for the course {course}, specific to the subject {subject}.
+    Only include exercises that are relevant to the course content.
+    Start with basic exercises and progressively add more and more complex exercises.
+    Explain each exercise in detail.
+    IMPORTANT: don't include exercises that are already included in the course content or in the examples!
+  context:
+    - create_course_outline
+    - write_course_content
+    - create_examples
+  expected_output: >
+    Markdown-formatted exercises followed by a detailed explanation of each exercise.
+    Add 3 stars at the end of each title to indicate the level of complexity.
+    - Basic exercises has 1 filled star and 2 open stars: &#9733;&#9734;&#9734;
+    - Intermediate exercises has 2 filled stars and 1 open star: &#9733;&#9733;&#9734;
+    - Advanced exercises has 3 filled stars and 0 open stars: &#9733;&#9733;&#9733;
+    
+    Formatting Guidelines:
+    - Use Markdown formatting for headings, subheadings, and lists
+    - Start with a heading 2 (##) for the title
+    - Use heading 3 (###) for each exercise e.g:
+      ### Calculator &#9733;&#9734;&#9734;
+      ### Roll the dice &#9733;&#9733;&#9734;
+    - Enclose code exercises in appropriate Markdown code blocks
+    - Ensure proper indentation and spacing for readability
+
+create_quiz_task:
+  agent: quiz_creator
+  context:
+    - create_course_outline
+    - write_course_content
+  description: >
+    Create {quiz} Kahoot-style questions for the course {course}, specific to the subject {subject}.
+    Only create questions about the course content.
+  expected_output: >
+    Start with the question, following 5 possible answers and ends with the correct answer.
+
+    The content should follow this structure:
+
+      1. Quiz about: "{course}: {subject}"
+
+      2. Question 1:
+        The question
+        A codeblock with 5 possible answers (A, B, C, D, E)
+        The correct answer
+
+      3. Question 2:
+        The question
+        A codeblock with 5 possible answers (A, B, C, D, E)
+        The correct answer
+
+      ...
+
+      Formatting Guidelines:
+        - Use Markdown formatting for headings, subheadings, and lists
+        - Start with a heading 2 (##) for the course title
+        - Enclose code examples in appropriate Markdown code blocks
+        - Ensure proper indentation and spacing for readability
