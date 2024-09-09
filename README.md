@@ -15,14 +15,13 @@ The crew produces six key files:
 6. `6_quiz.md`: Kahoot-style questions to test understanding.
 7. `final.md`: A complete version of the course, combining extended content, examples, exercises, and quiz questions.
 
-## Important Notes
-
-- Always verify the generated content for accuracy, as AI models can produce inaccuracies.
-- Each run of the crew overwrites previous output files. Back up any content you wish to keep.
-- Multiple runs can produce slightly different content, offering variety.
-- Experiment with different AI models to find the best fit for your needs.
-- For non-English courses, ensure the chosen model supports multiple languages.
-- Consider the generated content as a starting point for further refinement.
+> [!CAUTION]
+> - Always verify the generated content for accuracy, as AI models can produce inaccuracies.
+> - Each run of the crew overwrites previous output files. Back up any content you wish to keep.
+> - Multiple runs can produce slightly different content, offering variety.
+> - Experiment with different AI models to find the best fit for your needs.
+> - For non-English courses, ensure the chosen model supports multiple languages.
+> - Consider the generated content as a starting point for further refinement.
 
 ## Setup Requirements
 
@@ -96,8 +95,7 @@ When running the crew, you'll be prompted to provide:
 
 Find the generated course materials in the `course` folder, all in Markdown format.
 
-**Tip**:
-- Install
-the [Markdown Viewer](https://chromewebstore.google.com/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk) Chrome
-extension for easy viewing.
-- Remember to [allow access to local files](https://github.com/simov/markdown-viewer?tab=readme-ov-file#manage-origins).
+> [!TIP]
+> - Install the [Markdown Viewer](https://chromewebstore.google.com/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk) Chrome extension for easy viewing.
+> - Remember to [allow access to local files](https://github.com/simov/markdown-viewer?tab=readme-ov-file#manage-origins).
+> - Drag and drop the `course/index.md` file to your browser.
